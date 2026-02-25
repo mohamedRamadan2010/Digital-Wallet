@@ -1,3 +1,4 @@
+```mermaid
 sequenceDiagram
     autonumber
     actor Client
@@ -6,7 +7,6 @@ sequenceDiagram
     participant WS as Wallet Service
     participant DB as Transaction DB
 
-    ```mermaid
     Client->>TS: POST /transfer (amount, from, to)
     TS->>DB: Save status: PENDING
     
@@ -35,7 +35,7 @@ sequenceDiagram
                 
                 %% Step 4: COMPENSATION
                 rect rgb(255, 230, 230)
-                    note right of TS: COMPENSATING TRANSACTION
+                    Note right of TS: COMPENSATING TRANSACTION
                     TS->>WS: POST /wallets/{from}/credit (Refund Sender)
                     TS->>DB: Update status: FAILED
                 end
@@ -48,4 +48,4 @@ sequenceDiagram
             end
         end
     end
-    ```
+```
