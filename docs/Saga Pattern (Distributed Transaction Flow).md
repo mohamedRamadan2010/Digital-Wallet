@@ -5,7 +5,8 @@ sequenceDiagram
     participant FS as Fraud Service
     participant WS as Wallet Service
     participant DB as Transaction DB
-    
+
+    ```mermaid
     Client->>TS: POST /transfer (amount, from, to)
     TS->>DB: Save status: PENDING
     
@@ -47,3 +48,4 @@ sequenceDiagram
             end
         end
     end
+    ```
