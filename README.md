@@ -16,18 +16,31 @@ All services are containerized via Docker and orchestrated via Docker Compose fo
 
 
 wallet-platform-monorepo/
+
 ├── .github/                   # CI/CD workflows (GitHub Actions)
+
 ├── docs/                      # Architecture diagrams, API specs
+
 ├── api-gateway/               # Spring Cloud Gateway source code
+
 ├── eureka-server/             # Service discovery source code
+
 ├── identity-service/          # Identity microservice source code
+
 ├── wallet-service/            # Wallet microservice source code
+
 ├── transaction-service/       # Transaction microservice source code
+
 ├── fraud-service/             # Fraud detection microservice source code
+
 ├── docker-compose.yml         # Local infrastructure (Postgres, Zipkin, etc.)
+
 ├── init-dbs.sql               # Database initialization script
+
 ├── .gitignore                 # Global gitignore (Java, IDEs, OS files)
+
 └── README.md                  # Project overview, setup instructions, architecture
+
 
 
 ![Java 21](https://img.shields.io/badge/Java-21-blue?logo=java)
