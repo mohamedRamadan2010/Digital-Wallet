@@ -63,3 +63,9 @@ Import the Postman Collection located at `docs/wallet-platform.postman_collectio
 * Resilience4j (Circuit Breaker)
 * OpenFeign (Inter-service APIs)
 * Micrometer & Zipkin (Distributed Tracing)
+
+
+![Java 21](https://img.shields.io/badge/Java-21-blue?logo=java)
+![Spring Boot 3](https://img.shields.io/badge/Spring_Boot-3.2-6DB33F?logo=spring)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?logo=postgresql)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker)
