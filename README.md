@@ -38,6 +38,8 @@ mvn clean install -DskipTests
 Launch PostgreSQL and Zipkin with Docker Compose:
 ```bash
 docker-compose up -d
+or for mac user 
+docker compose up -d
 ```
 
 ### Running Microservices
