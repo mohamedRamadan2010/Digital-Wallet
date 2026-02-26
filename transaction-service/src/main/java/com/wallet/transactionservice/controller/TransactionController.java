@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping("/transfer")
-    public ResponseEntity<TransferResponse> transfer(@RequestBody TransferRequest request) {
+    public ResponseEntity<TransferResponse> transfer(@Valid @RequestBody TransferRequest request) {
         return ResponseEntity.ok(transactionService.transferAmount(request));
     }
 
