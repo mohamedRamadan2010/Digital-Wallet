@@ -57,6 +57,7 @@ Import the Postman Collection located at `docs/wallet-platform.postman_collectio
 2. Logging in to get a JWT token
 3. Creating Wallets and Top-ups
 4. Conducting P2P Money Transfers via the API Gateway
+5. Also, you can check the wallet balance
 
 ## 📋 Technology Stack
 * Java 21 & Spring Boot 3.2.x
