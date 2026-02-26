@@ -8,7 +8,9 @@ Designed as a showcase of enterprise microservices architecture, this platform f
 
 This repository is designed around the **Microservices Architecture**.
 
-[System Architecture](docs/High-Level%20System%20Architecture.md)
+  1. [System Architecture](docs/High-Level%20System%20Architecture.md)
+
+  2. [Saga Pattern Distributed Transaction Flow](<docs/Saga Pattern (Distributed Transaction Flow).md>)
 
 ### Core Components
 1. **API Gateway (Spring Cloud Gateway):** Centralized entrypoint. Handles request routing, load balancing, and global JWT authentication.
