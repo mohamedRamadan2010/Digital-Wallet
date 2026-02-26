@@ -28,7 +28,7 @@ public class TransactionController {
     }
 
     @GetMapping("/history/{userId}")
-    public ResponseEntity<List<Transaction>> getHistory(@PathVariable Long userId) {
+    public ResponseEntity<List<Transaction>> getHistory(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(transactionService.getTransactionHistory(userId));
     }
 }
