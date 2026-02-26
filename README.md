@@ -8,7 +8,7 @@ Designed as a showcase of enterprise microservices architecture, this platform f
 
 This repository is designed around the **Microservices Architecture**.
 
-![System Architecture](docs/High-Level System Architecture.md)
+[System Architecture](docs/High-Level%20System%20Architecture.md)
 
 ### Core Components
 1. **API Gateway (Spring Cloud Gateway):** Centralized entrypoint. Handles request routing, load balancing, and global JWT authentication.
