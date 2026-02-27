@@ -1,18 +1,19 @@
 package com.wallet.apigateway.filter;
 
-import com.wallet.apigateway.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Component
 public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private WebClient.Builder webClientBuilder;
 
     public AuthenticationFilter() {
         super(Config.class);
@@ -34,14 +35,18 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                 return exchange.getResponse().setComplete();
             }
 
-            try {
-                jwtUtil.validateToken(authHeader);
-            } catch (Exception e) {
-                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                return exchange.getResponse().setComplete();
-            }
+            final String token = authHeader;
 
-            return chain.filter(exchange);
+            return webClientBuilder.build()
+                    .get()
+                    .uri("http://identity-service/api/auth/validate?token=" + token)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .flatMap(response -> chain.filter(exchange))
+                    .onErrorResume(e -> {
+                        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                        return exchange.getResponse().setComplete();
+                    });
         });
     }
 

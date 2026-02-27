@@ -38,6 +38,10 @@ public class JwtService {
                 .compact();
     }
 
+    public Date extractExpiration(String token) {
+        return Jwts.parser().verifyWith(getSignKey()).build().parseSignedClaims(token).getPayload().getExpiration();
+    }
+
     public void validateToken(final String token) {
         Jwts.parser().verifyWith(getSignKey()).build().parseSignedClaims(token);
     }

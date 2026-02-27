@@ -32,4 +32,10 @@ public class AuthController {
         authService.validateToken(token);
         return ResponseEntity.ok("Token is valid");
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        authService.logout(token);
+        return ResponseEntity.ok("Logged out successfully");
+    }
 }
