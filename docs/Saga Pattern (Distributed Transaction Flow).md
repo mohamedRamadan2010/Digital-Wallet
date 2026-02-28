@@ -2,50 +2,38 @@
 sequenceDiagram
     autonumber
     actor Client
-    participant TS as Transaction Service<br/>(Orchestrator)
+    participant TS as Transaction Service
+    participant K as Kafka Broker
     participant FS as Fraud Service
     participant WS as Wallet Service
     participant DB as Transaction DB
 
     Client->>TS: POST /transfer (amount, from, to)
     TS->>DB: Save status: PENDING
+    TS->>K: Produce [TRANSACTION_CREATED]
+    TS-->>Client: 202 Accepted (Transaction initiated)
     
     %% Step 1: Fraud Check
-    TS->>FS: Check Transaction (amount, frequency)
+    K->>FS: Consume [TRANSACTION_CREATED]
+    FS->>FS: Check Transaction (amount, velocity)
     alt isFraudulent
-        FS-->>TS: Fraud Detected (Reject)
-        TS->>DB: Update status: FAILED
-        TS-->>Client: 400 Bad Request (Fraud limit exceeded)
+        FS->>K: Produce [FRAUD_CHECK_FAILED]
+        K->>TS: Consume [FRAUD_CHECK_FAILED]
+        TS->>DB: Update status: FAILED (Reason: Fraud Detected)
     else isSafe
-        FS-->>TS: Approved
+        FS->>K: Produce [FRAUD_CHECK_PASSED]
         
-        %% Step 2: Debit Sender
-        TS->>WS: POST /wallets/{from}/debit
-        alt Insufficient Funds / Locked
-            WS-->>TS: 400/409 Error
-            TS->>DB: Update status: FAILED
-            TS-->>Client: 400 Bad Request (Debit failed)
-        else Debit Success
-            WS-->>TS: 200 OK
-            
-            %% Step 3: Credit Receiver
-            TS->>WS: POST /wallets/{to}/credit
-            alt Credit Fails (e.g., account frozen)
-                WS-->>TS: 400 Error
-                
-                %% Step 4: COMPENSATION
-                rect rgb(255, 230, 230)
-                    Note right of TS: COMPENSATING TRANSACTION
-                    TS->>WS: POST /wallets/{from}/credit (Refund Sender)
-                    TS->>DB: Update status: FAILED
-                end
-                
-                TS-->>Client: 500 Internal Error (Transfer failed, refunded)
-            else Credit Success
-                WS-->>TS: 200 OK
-                TS->>DB: Update status: COMPLETED
-                TS-->>Client: 200 OK (Transfer Successful)
-            end
+        %% Step 2 & 3: Wallet Transfer
+        K->>WS: Consume [FRAUD_CHECK_PASSED]
+        WS->>WS: Debit Sender / Credit Receiver
+        alt Insufficient Funds / Wallet Locked
+            WS->>K: Produce [WALLET_DEBIT_FAILED] / [WALLET_CREDIT_FAILED]
+            K->>TS: Consume [WALLET_*_FAILED]
+            TS->>DB: Update status: FAILED (Reason: Debit/Credit error)
+        else Transfer Success
+            WS->>K: Produce [WALLET_TRANSFER_COMPLETED]
+            K->>TS: Consume [WALLET_TRANSFER_COMPLETED]
+            TS->>DB: Update status: COMPLETED
         end
     end
 ```
