@@ -51,3 +51,5 @@ logging:
   level:
     zipkin2: DEBUG
     io.micrometer.tracing: DEBUG
+    org.springframework.boot.actuate.autoconfigure.tracing: DEBUG
+    org.springframework.boot.autoconfigure.EnableAutoConfiguration: DEBUG

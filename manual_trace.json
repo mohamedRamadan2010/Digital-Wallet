@@ -1,0 +1,14 @@
+[
+  {
+    "traceId": "69a333dcfa80747c681a4f7b0f6f93bb",
+    "name": "manual-test",
+    "id": "14fb325fce10f30d",
+    "kind": "SERVER",
+    "timestamp": 1772303865983000,
+    "duration": 5000,
+    "localEndpoint": {
+      "serviceName": "identity-service",
+      "ipv4": "127.0.0.1"
+    }
+  }
+]

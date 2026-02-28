@@ -27,7 +27,7 @@
         <spring-cloud.version>2023.0.0</spring-cloud.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <lombok.version>1.18.30</lombok.version>
+        <lombok.version>custom-local</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <jjwt.version>0.12.5</jjwt.version>
         <springdoc.version>2.3.0</springdoc.version>
@@ -86,7 +86,17 @@
             <dependency>
                 <groupId>io.zipkin.reporter2</groupId>
                 <artifactId>zipkin-reporter-brave</artifactId>
-                <version>3.2.1</version>
+                <version>2.16.3</version>
+            </dependency>
+            <dependency>
+                <groupId>io.zipkin.reporter2</groupId>
+                <artifactId>zipkin-reporter</artifactId>
+                <version>2.16.3</version>
+            </dependency>
+            <dependency>
+                <groupId>io.zipkin.zipkin2</groupId>
+                <artifactId>zipkin</artifactId>
+                <version>2.24.2</version>
             </dependency>
             
             <!-- Resilience4j -->
@@ -122,6 +132,13 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                     <configuration>
                         <excludes>
                             <exclude>
@@ -130,6 +147,27 @@
                             </exclude>
                         </excludes>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>3.1.1</version>
+                    <executions>
+                        <execution>
+                            <id>install-local-lombok</id>
+                            <phase>initialize</phase>
+                            <goals>
+                                <goal>install-file</goal>
+                            </goals>
+                            <configuration>
+                                <file>${maven.multiModuleProjectDirectory}/JARS/lombok.jar</file>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>custom-local</version>
+                                <packaging>jar</packaging>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

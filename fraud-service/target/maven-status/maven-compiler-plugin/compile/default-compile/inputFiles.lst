@@ -1,0 +1,10 @@
+/Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/dto/FraudCheckRequest.java
+/Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/dto/ErrorResponse.java
+/Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/service/FraudService.java
+/Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/exception/GlobalExceptionHandler.java
+/Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/entity/FraudCheckHistory.java
+/Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/FraudServiceApplication.java
+/Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/repository/FraudCheckHistoryRepository.java
+/Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/config/OpenApiConfig.java
+/Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/controller/FraudController.java
+/Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/dto/FraudCheckResponse.java

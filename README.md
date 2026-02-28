@@ -72,6 +72,15 @@ Import the Postman Collection located at `docs/wallet-platform.postman_collectio
 * Micrometer & Zipkin (Distributed Tracing)
 
 
+To run your new platform, follow these steps:
+
+1. Stop any currently running databases or services in IntelliJ or old Docker containers.
+2. Ensure you have built your jars by running: mvn clean package -DskipTests
+3. Spin up the infrastructure network and backing services: docker compose -f docker-compose.infra.yml up -d
+4. Spin up the microservices: docker compose -f docker-compose.app.yml up --build -d
+These files are fully ready and the environment variables properly map container names (wallet-postgres, wallet-eureka-server, etc.). Let me know when you try spinning them up!
+
+
 ![Java 21](https://img.shields.io/badge/Java-21-blue?logo=java)
 ![Spring Boot 3](https://img.shields.io/badge/Spring_Boot-3.2-6DB33F?logo=spring)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?logo=postgresql)

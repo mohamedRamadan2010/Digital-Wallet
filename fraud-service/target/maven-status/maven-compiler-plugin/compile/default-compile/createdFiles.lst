@@ -1,0 +1,14 @@
+com/wallet/fraudservice/dto/ErrorResponse.class
+com/wallet/fraudservice/dto/FraudCheckResponse$FraudCheckResponseBuilder.class
+com/wallet/fraudservice/FraudServiceApplication.class
+com/wallet/fraudservice/entity/FraudCheckHistory.class
+com/wallet/fraudservice/controller/FraudController.class
+com/wallet/fraudservice/exception/GlobalExceptionHandler.class
+com/wallet/fraudservice/config/OpenApiConfig.class
+com/wallet/fraudservice/dto/FraudCheckResponse.class
+com/wallet/fraudservice/dto/FraudCheckRequest.class
+com/wallet/fraudservice/entity/FraudCheckHistory$FraudCheckHistoryBuilder.class
+com/wallet/fraudservice/dto/ErrorResponse$ErrorResponseBuilder.class
+com/wallet/fraudservice/dto/FraudCheckRequest$FraudCheckRequestBuilder.class
+com/wallet/fraudservice/repository/FraudCheckHistoryRepository.class
+com/wallet/fraudservice/service/FraudService.class

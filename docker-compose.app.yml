@@ -1,0 +1,101 @@
+version: '3.8'
+
+services:
+  eureka-server:
+    build:
+      context: ./eureka-server
+    container_name: wallet-eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - wallet-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    container_name: wallet-api-gateway
+    ports:
+      - "8080:8080"
+    networks:
+      - wallet-network
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://wallet-zipkin:9411/api/v2/spans
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+
+  identity-service:
+    build:
+      context: ./identity-service
+    container_name: wallet-identity-service
+    ports:
+      - "8081:8081"
+    networks:
+      - wallet-network
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://wallet-postgres:5432/identity_db
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://wallet-zipkin:9411/api/v2/spans
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+
+  wallet-service:
+    build:
+      context: ./wallet-service
+    container_name: wallet-wallet-service
+    ports:
+      - "8082:8082"
+    networks:
+      - wallet-network
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://wallet-postgres:5432/wallet_db
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://wallet-zipkin:9411/api/v2/spans
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+
+  transaction-service:
+    build:
+      context: ./transaction-service
+    container_name: wallet-transaction-service
+    ports:
+      - "8084:8084"
+    networks:
+      - wallet-network
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://wallet-postgres:5432/transaction_db
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://wallet-zipkin:9411/api/v2/spans
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+
+  fraud-service:
+    build:
+      context: ./fraud-service
+    container_name: wallet-fraud-service
+    ports:
+      - "8083:8083"
+    networks:
+      - wallet-network
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://wallet-zipkin:9411/api/v2/spans
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+
+networks:
+  wallet-network:
+    external: true
+    name: wallet-network
