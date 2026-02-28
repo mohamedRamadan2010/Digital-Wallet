@@ -60,6 +60,7 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - SPRING_DATASOURCE_URL=jdbc:postgresql://wallet-postgres:5432/wallet_db
       - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://wallet-zipkin:9411/api/v2/spans
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=wallet-kafka:29092
     depends_on:
       eureka-server:
         condition: service_healthy
@@ -76,6 +77,7 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - SPRING_DATASOURCE_URL=jdbc:postgresql://wallet-postgres:5432/transaction_db
       - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://wallet-zipkin:9411/api/v2/spans
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=wallet-kafka:29092
     depends_on:
       eureka-server:
         condition: service_healthy
@@ -91,6 +93,7 @@ services:
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://wallet-zipkin:9411/api/v2/spans
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=wallet-kafka:29092
     depends_on:
       eureka-server:
         condition: service_healthy

@@ -1,5 +1,7 @@
 /Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/dto/FraudCheckRequest.java
 /Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/dto/ErrorResponse.java
+/Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/service/FraudEventConsumer.java
+/Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/event/KafkaEvent.java
 /Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/service/FraudService.java
 /Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/exception/GlobalExceptionHandler.java
 /Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/fraud-service/src/main/java/com/wallet/fraudservice/entity/FraudCheckHistory.java

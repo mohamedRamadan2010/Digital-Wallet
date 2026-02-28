@@ -5,7 +5,9 @@ import com.wallet.transactionservice.dto.TransferResponse;
 import com.wallet.transactionservice.entity.Transaction;
 import com.wallet.transactionservice.entity.TransactionStatus;
 import com.wallet.transactionservice.repository.TransactionRepository;
+import com.wallet.transactionservice.event.KafkaEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.List;
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
-    private final SagaOrchestrator sagaOrchestrator;
+    private final KafkaTemplate<String, KafkaEvent> kafkaTemplate;
 
     public List<Transaction> getTransactionHistory(Long userId) {
         return transactionRepository.findByUserIdOrderByCreatedAtDesc(userId);
@@ -33,9 +35,16 @@ public class TransactionService {
 
         transaction = transactionRepository.save(transaction);
 
-        // This could be asynchronous via messaging (Kafka), but keeping it synchronous
-        // orchestration for simplicity.
-        sagaOrchestrator.executeTransferSaga(transaction);
+        // Publish event to Kafka instead of synchronous saga orchestrator call
+        KafkaEvent event = KafkaEvent.builder()
+                .eventType("TRANSACTION_CREATED")
+                .transactionId(transaction.getId().toString())
+                .fromUserId(transaction.getFromUserId())
+                .toUserId(transaction.getToUserId())
+                .amount(transaction.getAmount())
+                .build();
+
+        kafkaTemplate.send("transaction-events", transaction.getId().toString(), event);
 
         return TransferResponse.builder()
                 .transactionId(transaction.getId().toString())

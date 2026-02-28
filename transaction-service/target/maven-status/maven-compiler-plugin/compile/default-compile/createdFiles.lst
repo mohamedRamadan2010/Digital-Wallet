@@ -1,6 +1,8 @@
+com/wallet/transactionservice/event/KafkaEvent.class
 com/wallet/transactionservice/controller/TransactionController.class
 com/wallet/transactionservice/client/WalletClient.class
 com/wallet/transactionservice/exception/GlobalExceptionHandler.class
+com/wallet/transactionservice/event/KafkaEvent$KafkaEventBuilder.class
 com/wallet/transactionservice/client/FraudClient$FraudCheckResponse$FraudCheckResponseBuilder.class
 com/wallet/transactionservice/client/WalletClient$WalletDto.class
 com/wallet/transactionservice/client/WalletClient$TransferDto$TransferDtoBuilder.class
@@ -24,3 +26,4 @@ com/wallet/transactionservice/repository/TransactionRepository.class
 com/wallet/transactionservice/TransactionServiceApplication.class
 com/wallet/transactionservice/config/OpenApiConfig.class
 com/wallet/transactionservice/dto/TransferResponse$TransferResponseBuilder.class
+com/wallet/transactionservice/service/TransactionEventConsumer.class

@@ -1,7 +1,10 @@
+com/wallet/walletservice/event/KafkaEvent.class
 com/wallet/walletservice/config/OpenApiConfig.class
 com/wallet/walletservice/dto/WalletDto$WalletDtoBuilder.class
 com/wallet/walletservice/entity/TransactionType.class
+com/wallet/walletservice/event/KafkaEvent$KafkaEventBuilder.class
 com/wallet/walletservice/dto/WalletDto.class
+com/wallet/walletservice/service/WalletEventConsumer.class
 com/wallet/walletservice/entity/WalletTransaction.class
 com/wallet/walletservice/entity/Wallet.class
 com/wallet/walletservice/entity/WalletTransaction$WalletTransactionBuilder.class
