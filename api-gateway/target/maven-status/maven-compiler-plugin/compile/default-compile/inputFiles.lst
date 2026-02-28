@@ -1,3 +1,4 @@
 /Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/api-gateway/src/main/java/com/wallet/apigateway/util/JwtUtil.java
 /Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/api-gateway/src/main/java/com/wallet/apigateway/filter/AuthenticationFilter.java
 /Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/api-gateway/src/main/java/com/wallet/apigateway/ApiGatewayApplication.java
+/Users/ahmedmohamedzain/IdeaProjects/Digital-Wallet/api-gateway/src/main/java/com/wallet/apigateway/config/RateLimiterConfig.java

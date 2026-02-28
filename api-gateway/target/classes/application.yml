@@ -4,6 +4,10 @@ server:
 spring:
   application:
     name: api-gateway
+  data:
+    redis:
+      host: wallet-redis
+      port: 6379
   cloud:
     gateway:
       discovery:
@@ -14,6 +18,13 @@ spring:
           uri: lb://identity-service
           predicates:
             - Path=/api/auth/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@remoteAddressKeyResolver}"
         - id: fraud-service
           uri: lb://FRAUD-SERVICE
           predicates:
@@ -24,12 +35,22 @@ spring:
             - Path=/api/wallets/**
           filters:
             - AuthenticationFilter
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+                key-resolver: "#{@remoteAddressKeyResolver}"
         - id: transaction-service
           uri: lb://transaction-service
           predicates:
             - Path=/api/transactions/**
           filters:
             - AuthenticationFilter
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+                key-resolver: "#{@remoteAddressKeyResolver}"
 
 eureka:
   client:
