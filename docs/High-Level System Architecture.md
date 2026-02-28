@@ -5,12 +5,14 @@ flowchart TD
     subgraph Infrastructure
         Gateway[API Gateway<br/>Spring Cloud]
         Registry[Eureka Server<br/>Service Discovery]
+        Kafka[Apache Kafka<br/>Message Broker]
+        Zookeeper[Zookeeper<br/>Cluster Manager]
     end
     
     subgraph Microservices
         Identity[Identity Service<br/>JWT Auth / Roles]
         Wallet[Wallet Service<br/>Ledger / Balances]
-        Transaction[Transaction Service<br/>Saga Orchestrator]
+        Transaction[Transaction Service<br/>Event Choreographer]
         Fraud[Fraud Service<br/>Rules Engine]
     end
     
@@ -31,14 +33,19 @@ flowchart TD
     Wallet -.->|Registers| Registry
     Transaction -.->|Registers| Registry
     Fraud -.->|Registers| Registry
+    Kafka <-.-> Zookeeper
     
     %% Database Connections
     Identity --> DB_Id
     Wallet --> DB_Wal
     Transaction --> DB_Tx
     
-    %% Synchronous Inter-service Communication
-    Transaction ==>|OpenFeign| Wallet
-    Transaction ==>|OpenFeign| Fraud
+    %% Asynchronous Event Choreography (Kafka)
+    Transaction -.->|Produces: TRANSACTION_CREATED| Kafka
+    Kafka -.->|Consumes: TRANSACTION_CREATED| Fraud
+    Fraud -.->|Produces: FRAUD_CHECK_PASSED/FAILED| Kafka
+    Kafka -.->|Consumes: FRAUD_EVENTS| Wallet
+    Wallet -.->|Produces: WALLET_TRANSFER_COMPLETED| Kafka
+    Kafka -.->|Consumes: WALLET_EVENTS| Transaction
 
 ```

@@ -16,9 +16,9 @@ This repository is designed around the **Microservices Architecture**.
 1. **API Gateway (Spring Cloud Gateway):** Centralized entrypoint. Handles request routing, load balancing, and global JWT authentication.
 2. **Eureka Server (Spring Cloud Netflix):** Service Discovery Registry.
 3. **Identity Service:** Responsible for User Registration, Authentication, and setting `JWT` tokens.
-4. **Wallet Service:** Manages user wallets. Maintains balance and processes credits/debits asynchronously or via orchestration. Uses **Optimistic Locking** to prevent double spending.
-5. **Fraud Service:** Analyzes transaction validity. Declines transactions > 10,000 threshold, or if velocity > 3 transactions per minute.
-6. **Transaction Service:** Operates the **Saga Pattern (Orchestration)** handling cross-service consistency when sending money between users. Uses **Resilience4j** for circuit breaking and retries.
+4. **Wallet Service:** Manages user wallets. Maintains balance and processes credits/debits asynchronously via Kafka events. Uses **Optimistic Locking** to prevent double spending.
+5. **Fraud Service:** Analyzes transaction validity asynchronously via Kafka events. Declines transactions > 10,000 threshold, or if velocity > 3 transactions per minute.
+6. **Transaction Service:** Operates the **Event-Driven Choreography** handling cross-service consistency when sending money between users by producing/consuming Kafka events.
 
 ### Observability
 Micrometer + Zipkin are employed to provide distributed tracing across HTTP communication.
@@ -85,19 +85,19 @@ Import the Postman Collection located at `docs/wallet-platform.postman_collectio
 * PostgreSQL (Persistence)
 * Netflix Eureka (Service Discovery)
 * Resilience4j (Circuit Breaker)
-* OpenFeign (Inter-service APIs)
+* Apache Kafka & Zookeeper (Message Broker / Event Choreography)
 * Micrometer & Zipkin (Distributed Tracing)
 
 ## 🏗️ Architecture Discussion Topics (Status Matrix)
 
 | Discussion Topic | Status | Implementation Details / Pending Task |
 | :--- | :---: | :--- |
-| **Handling distributed transactions** | ✅ Implemented | Implemented the **Saga Pattern (Orchestration)** in `Transaction Service`. It manages cross-system transfers, initiating credits/debits via Feign and sending compensation requests upon failure. |
+| **Handling distributed transactions** | ✅ Implemented | Implemented the **Saga Pattern (Choreography)** using Apache Kafka. It manages cross-system transfers, publishing domain events, and compensating on failures. |
 | **Preventing double spending** | ✅ Implemented | Implemented **Optimistic Locking** (`@Version`) in the User `Wallet` entity to ensure race conditions immediately fail with `OptimisticLockException` during concurrently overlapping transactions. |
 | **Scaling Wallet Service** | ✅ Implemented | Microservices are stateless, natively load-balanced through **Spring Cloud Gateway**, and discoverable via **Eureka Server**. Can be scaled horizontally via Docker Compose `scale` or Kubernetes. |
 | **Idempotency** | ⚠️ Partial | `WalletTransaction` entity has a `referenceId` for idempotency during Saga transactions, ensuring retried transactions aren't duplicated. *Pending:* Add global Idempotency Keys (`Idempotency-Key` header validation in API Gateway). |
 | **Eventual consistency** | ✅ Implemented | Guaranteed through the Saga Orchestrator. When a transaction spans users, balances may be briefly inconsistent until the orchestrator completes all associated sub-transactions or rollbacks. |
-| **Moving to event-driven architecture (Kafka)** | ❌ Not Implemented | Currently using synchronous HTTP orchestration (OpenFeign). *Pending Task:* Replace Feign calls with a Kafka message broker (`spring-kafka` & `Debezium` Outbox pattern) for pure asynchronous event choreographies. |
+| **Moving to event-driven architecture (Kafka)** | ✅ Implemented | Successfully replaced all synchronous OpenFeign API calls with a pure asynchronous event choreography via Apache Kafka (`spring-kafka`). |
 | **Rate limiting** | ❌ Not Implemented | *Pending Task:* Add Spring Cloud Gateway `RequestRateLimiter` configured with Redis (`spring-boot-starter-data-redis-reactive`) to restrict API request velocity per IP/UserId. |
 
 ---
