@@ -13,7 +13,7 @@ This repository is designed around the **Microservices Architecture**.
   2. [Saga Pattern Distributed Transaction Flow](<docs/Saga Pattern (Distributed Transaction Flow).md>)
 
 ### Core Components
-1. **API Gateway (Spring Cloud Gateway):** Centralized entrypoint. Handles request routing, load balancing, and global JWT authentication.
+1. **API Gateway (Spring Cloud Gateway):** Centralized entrypoint. Handles request routing, load balancing, global JWT authentication, and **Global Rate Limiting** utilizing Redis.
 2. **Eureka Server (Spring Cloud Netflix):** Service Discovery Registry.
 3. **Identity Service:** Responsible for User Registration, Authentication, and setting `JWT` tokens.
 4. **Wallet Service:** Manages user wallets. Maintains balance and processes credits/debits asynchronously or via orchestration. Uses **Optimistic Locking** to prevent double spending.
@@ -40,7 +40,7 @@ mvn clean package -DskipTests
 > **Note for Windows Users:** If `mvn` is not recognized, ensure Maven is added to your system's `PATH` environment variable.
 
 ### Starting the Infrastructure
-The application requires PostgreSQL (database) and Zipkin (distributed tracing). We use a dedicated Docker Compose file for this.
+The application requires PostgreSQL (database), Redis (rate limiting cache), and Zipkin (distributed tracing). We use a dedicated Docker Compose file for this.
 
 **Run this command to start the backing services:**
 ```bash
@@ -83,6 +83,7 @@ Import the Postman Collection located at `docs/wallet-platform.postman_collectio
 ## 📋 Technology Stack
 * Java 21 & Spring Boot 3.2.x
 * PostgreSQL (Persistence)
+* Redis (Rate Limiting Cache)
 * Netflix Eureka (Service Discovery)
 * Resilience4j (Circuit Breaker)
 * OpenFeign (Inter-service APIs)
@@ -98,7 +99,7 @@ Import the Postman Collection located at `docs/wallet-platform.postman_collectio
 | **Idempotency** | ⚠️ Partial | `WalletTransaction` entity has a `referenceId` for idempotency during Saga transactions, ensuring retried transactions aren't duplicated. *Pending:* Add global Idempotency Keys (`Idempotency-Key` header validation in API Gateway). |
 | **Eventual consistency** | ✅ Implemented | Guaranteed through the Saga Orchestrator. When a transaction spans users, balances may be briefly inconsistent until the orchestrator completes all associated sub-transactions or rollbacks. |
 | **Moving to event-driven architecture (Kafka)** | ❌ Not Implemented | Currently using synchronous HTTP orchestration (OpenFeign). *Pending Task:* Replace Feign calls with a Kafka message broker (`spring-kafka` & `Debezium` Outbox pattern) for pure asynchronous event choreographies. |
-| **Rate limiting** | ❌ Not Implemented | *Pending Task:* Add Spring Cloud Gateway `RequestRateLimiter` configured with Redis (`spring-boot-starter-data-redis-reactive`) to restrict API request velocity per IP/UserId. |
+| **Rate limiting** | ✅ Implemented | Configured **Spring Cloud Gateway `RequestRateLimiter`** using **Redis** Reactive architecture to restrict API request velocity. Global bucket capacity defined per IP to mitigate DDoS and brute-force events. |
 
 ---
 ![Java 21](https://img.shields.io/badge/Java-21-blue?logo=java)

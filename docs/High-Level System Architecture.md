@@ -3,7 +3,7 @@ flowchart TD
     Client([Client / Mobile App])
     
     subgraph Infrastructure
-        Gateway[API Gateway<br/>Spring Cloud]
+        Gateway[API Gateway<br/>Spring Cloud & Rate Limiting]
         Registry[Eureka Server<br/>Service Discovery]
     end
     
@@ -18,10 +18,12 @@ flowchart TD
         DB_Id[(Identity DB<br/>PostgreSQL)]
         DB_Wal[(Wallet DB<br/>PostgreSQL)]
         DB_Tx[(Transaction DB<br/>PostgreSQL)]
+        DB_Redis[(Gateway Cache<br/>Redis)]
     end
     
     %% Traffic Routing
     Client -->|HTTPS + JWT| Gateway
+    Gateway -->|Rate Limit Checks| DB_Redis
     Gateway -->|Route: /api/auth| Identity
     Gateway -->|Route: /api/wallets| Wallet
     Gateway -->|Route: /api/transactions| Transaction
