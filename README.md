@@ -26,32 +26,49 @@ Micrometer + Zipkin are employed to provide distributed tracing across HTTP comm
 ## 🚀 Getting Started
 
 ### Prerequisites
-* Java 21
-* Maven 3.9+
-* Docker & Docker Compose
+* **Java 21 (JDK)**
+* **Maven 3.9+**
+* **Docker & Docker Compose** (Docker Desktop on Windows/Mac, or Docker Engine on Linux)
 
 ### Building the Project
+Before running the application, you need to build the microservices and package them into executable Spring Boot JARs. A custom local Lombok JAR is included and automatically installed into your local Maven repository during the build process.
+
+**Open your terminal (Command Prompt/PowerShell on Windows, Terminal on Mac/Linux) and run from the root directory:**
 ```bash
-# From the root directory:
-mvn clean install -DskipTests
+mvn clean package -DskipTests
 ```
+> **Note for Windows Users:** If `mvn` is not recognized, ensure Maven is added to your system's `PATH` environment variable.
 
 ### Starting the Infrastructure
-Launch PostgreSQL and Zipkin with Docker Compose:
-```bash
-docker-compose up -d
-or for mac user 
-docker compose up -d
-```
+The application requires PostgreSQL (database) and Zipkin (distributed tracing). We use a dedicated Docker Compose file for this.
 
-### Running Microservices
-Run the following applications, in order (preferably via IDE):
-1. `EurekaServerApplication` (Port 8761)
-2. `ApiGatewayApplication` (Port 8080)
-3. `IdentityServiceApplication` (Port 8081)
-4. `WalletServiceApplication` (Port 8082)
-5. `FraudServiceApplication` (Port 8083)
-6. `TransactionServiceApplication` (Port 8084)
+**Run this command to start the backing services:**
+```bash
+docker compose -f docker-compose.infra.yml up -d
+```
+*(The `docker compose` command works across Windows, Mac, and Linux as long as Docker Compose is installed).*
+
+### Running the Microservices
+With the infrastructure running and the JARs built, you can containerize and orchestrate the entire platform.
+
+**Run this command to build the Docker images and start the services:**
+```bash
+docker compose -f docker-compose.app.yml up --build -d
+```
+> **Note:** Wait about 20-30 seconds for the Eureka Server to fully start up and allow all microservices (API Gateway, Identity, Wallet, Transaction, Fraud) to register successfully.
+
+### Accessing the Platform
+Once everything is up and running, you can access the following dashboards:
+* **Eureka Service Registry:** [http://localhost:8761](http://localhost:8761)
+* **Zipkin Tracing:** [http://localhost:9411](http://localhost:9411)
+* **API Gateway (Main Entrypoint):** [http://localhost:8080](http://localhost:8080)
+
+### Application Teardown
+To cleanly stop and remove all application and infrastructure containers, run:
+```bash
+docker compose -f docker-compose.app.yml down
+docker compose -f docker-compose.infra.yml down
+```
 
 ### Validation using Postman
 Import the Postman Collection located at `docs/wallet-platform.postman_collection.json` into Postman to walk through:
@@ -59,28 +76,19 @@ Import the Postman Collection located at `docs/wallet-platform.postman_collectio
 2. Logging in to get a JWT token
 3. Creating Wallets and Top-ups
 4. Conducting P2P Money Transfers via the API Gateway
-5. Also, you can check the wallet balance
-6. load history for transactions
-7. log out
+5. Checking the wallet balance
+6. Loading transaction history
+7. Logging out
 
 ## 📋 Technology Stack
 * Java 21 & Spring Boot 3.2.x
 * PostgreSQL (Persistence)
-* Netfilx Eureka (Service Discovery)
+* Netflix Eureka (Service Discovery)
 * Resilience4j (Circuit Breaker)
 * OpenFeign (Inter-service APIs)
 * Micrometer & Zipkin (Distributed Tracing)
 
-
-To run your new platform, follow these steps:
-
-1. Stop any currently running databases or services in IntelliJ or old Docker containers.
-2. Ensure you have built your jars by running: mvn clean package -DskipTests
-3. Spin up the infrastructure network and backing services: docker compose -f docker-compose.infra.yml up -d
-4. Spin up the microservices: docker compose -f docker-compose.app.yml up --build -d
-These files are fully ready and the environment variables properly map container names (wallet-postgres, wallet-eureka-server, etc.). Let me know when you try spinning them up!
-
-
+---
 ![Java 21](https://img.shields.io/badge/Java-21-blue?logo=java)
 ![Spring Boot 3](https://img.shields.io/badge/Spring_Boot-3.2-6DB33F?logo=spring)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?logo=postgresql)
