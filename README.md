@@ -97,8 +97,8 @@ Import the Postman Collection located at `docs/wallet-platform.postman_collectio
 | **Scaling Wallet Service** | ✅ Implemented | Microservices are stateless, natively load-balanced through **Spring Cloud Gateway**, and discoverable via **Eureka Server**. Can be scaled horizontally via Docker Compose `scale` or Kubernetes. |
 | **Idempotency** | ⚠️ Partial | `WalletTransaction` entity has a `referenceId` for idempotency during Saga transactions, ensuring retried transactions aren't duplicated. *Pending:* Add global Idempotency Keys (`Idempotency-Key` header validation in API Gateway). |
 | **Eventual consistency** | ✅ Implemented | Guaranteed through the Saga Orchestrator. When a transaction spans users, balances may be briefly inconsistent until the orchestrator completes all associated sub-transactions or rollbacks. |
-| **Moving to event-driven architecture (Kafka)** | ❌ Not Implemented | Currently using synchronous HTTP orchestration (OpenFeign). *Pending Task:* Replace Feign calls with a Kafka message broker (`spring-kafka` & `Debezium` Outbox pattern) for pure asynchronous event choreographies. |
-| **Rate limiting** | ❌ Not Implemented | *Pending Task:* Add Spring Cloud Gateway `RequestRateLimiter` configured with Redis (`spring-boot-starter-data-redis-reactive`) to restrict API request velocity per IP/UserId. |
+| **Moving to event-driven architecture (Kafka)** | ❌ Not Implemented in this branch, but there are branches for this. Check other branches  | Currently using synchronous HTTP orchestration (OpenFeign). *Pending Task:* Replace Feign calls with a Kafka message broker (`spring-kafka` & `Debezium` Outbox pattern) for pure asynchronous event choreographies. |
+| **Rate limiting** | ❌❌ Not Implemented in this branch, but there are branches for this. Check other branches | *Pending Task:* Add Spring Cloud Gateway `RequestRateLimiter` configured with Redis (`spring-boot-starter-data-redis-reactive`) to restrict API request velocity per IP/UserId. |
 
 ---
 ![Java 21](https://img.shields.io/badge/Java-21-blue?logo=java)
